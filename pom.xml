@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.lemmabase</groupId>
+  <artifactId>lemma-java-bench</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>Lemma Java Performance Bench</name>
+  <description>Generate large Lemma Specs and measure load/eval via the Java SDK</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>21</maven.compiler.release>
+    <!-- com.lemmabase:lemma-engine from Maven Central -->
+    <lemma.version>0.9.9</lemma.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.lemmabase</groupId>
+      <artifactId>lemma-engine</artifactId>
+      <version>${lemma.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.5.0</version>
+        <configuration>
+          <mainClass>com.lemmabase.bench.Main</mainClass>
+          <jvmArgs>
+            <jvmArg>-Xmx2g</jvmArg>
+          </jvmArgs>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,120 @@
+spec rates_ups_ground
+"""
+Tiny zone × lb sample (full Ground card is 7 × 150 = 1,050 arms).
+"""
+
+data zone:        number
+data billable_lb: number
+
+
+rule base_rate:
+  0
+  unless zone is 2 and billable_lb >= 1 then 9.85
+  unless zone is 2 and billable_lb >= 5 then 12.40
+  unless zone is 5 and billable_lb >= 1 then 14.20
+  unless zone is 5 and billable_lb >= 5 then 18.75
+
+
+spec zones_ups
+"""
+ZIP3 → zone (full origin chart is ~900 arms per service).
+"""
+
+data dest_zip3: text
+
+
+rule ground_zone:
+  2
+  unless dest_zip3 is "100" then 4
+  unless dest_zip3 is "630" then 5
+  unless dest_zip3 is "902" then 8
+
+
+spec accessorials
+
+data is_residential: boolean
+data billable_lb:    number
+
+
+rule residential_fee:
+  0
+  unless is_residential then 6.50
+
+rule ahs_weight_fee:
+  0
+  unless billable_lb > 50 then 30
+
+rule accessorial_total:
+  residential_fee + ahs_weight_fee
+
+
+spec fuel_ground
+
+data diesel_usd: number
+
+
+rule fuel_pct:
+  20%
+  unless diesel_usd >= 4    then 21%
+  unless diesel_usd >= 4.50 then 22%
+
+
+spec quote_ups_ground
+"""
+Rating pipeline: DIM → billable → zone → base → accessorials → fuel → total.
+"""
+
+uses z: zones_ups
+  -> with dest_zip3: dest_zip3
+
+uses r: rates_ups_ground
+  -> with zone: zone
+  -> with billable_lb: billable_lb
+
+uses a: accessorials
+  -> with is_residential: is_residential
+  -> with billable_lb: billable_lb
+
+uses f: fuel_ground
+  -> with diesel_usd: diesel_usd
+
+data length_in:      number
+data width_in:       number
+data height_in:      number
+data actual_lb:      number
+data dest_zip3:      text
+data is_residential: boolean
+data diesel_usd:     number
+data discount_pct:   number
+
+
+rule dim_lb:
+  length_in * width_in * height_in / 139
+
+rule billable_lb:
+  actual_lb
+  unless dim_lb > actual_lb then dim_lb
+
+rule zone:
+  z.ground_zone
+
+rule base:
+  r.base_rate
+
+rule accessorials_total:
+  a.accessorial_total
+
+rule pre_fuel:
+  base + accessorials_total
+
+rule fuel_amount:
+  pre_fuel * f.fuel_pct
+
+rule with_fuel:
+  pre_fuel + fuel_amount
+
+rule discount_amount:
+  with_fuel * (discount_pct / 100)
+
+rule total:
+  with_fuel - discount_amount
