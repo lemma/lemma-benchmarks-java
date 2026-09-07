@@ -20,8 +20,8 @@ public final class BenchReport {
         "rules",
         "src_bytes",
         "load_med_ms",
-        "eval_med_us",
-        "eval_p95_us",
+        "eval_med_ms",
+        "eval_p95_ms",
         "explain");
     System.out.printf(
         Locale.ROOT,
@@ -53,8 +53,8 @@ public final class BenchReport {
             r.rules(),
             r.sourceBytes(),
             r.loadMedianMs(),
-            r.evalMedianUs(),
-            r.evalP95Us(),
+            r.evalMedianMs(),
+            r.evalP95Ms(),
             r.explain() ? "y" : "n");
       }
     }
@@ -120,7 +120,7 @@ public final class BenchReport {
         "upd_base_ms",
         "upd_ident_ms",
         "upd_unrel_ms",
-        "eval_mid_us",
+        "eval_mid_ms",
         "ok");
     System.out.printf(
         Locale.ROOT,
@@ -147,7 +147,7 @@ public final class BenchReport {
           r.updateBaseMedianMs(),
           r.updateMidIdenticalMedianMs(),
           r.updateUnrelatedMedianMs(),
-          r.evalAfterMidUs(),
+          r.evalAfterMidMs(),
           r.resultOk() ? "y" : "n");
     }
   }

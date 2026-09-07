@@ -21,7 +21,7 @@ public final class ReplanBench {
    * @param updateBaseMedianMs replace base_rates (replans base+quote+shop)
    * @param updateMidIdenticalMedianMs same quote bytes
    * @param updateUnrelatedMedianMs replace unrelated only
-   * @param evalAfterMidUs eval after mid V2 (base still V1)
+   * @param evalAfterMidMs eval after mid V2 (base still V1)
    * @param resultOk mid then base sanity checks passed
    */
   public record Result(
@@ -32,7 +32,7 @@ public final class ReplanBench {
       double updateBaseMedianMs,
       double updateMidIdenticalMedianMs,
       double updateUnrelatedMedianMs,
-      double evalAfterMidUs,
+      double evalAfterMidMs,
       boolean resultOk) {}
 
   private final int trials;
@@ -125,7 +125,7 @@ public final class ReplanBench {
         nsToMs(percentile(baseNs, 0.50)),
         nsToMs(percentile(midIdentNs, 0.50)),
         nsToMs(percentile(unrelatedNs, 0.50)),
-        nsToUs(evalAfterMidNs),
+        nsToMs(evalAfterMidNs),
         resultOk);
   }
 
@@ -156,9 +156,5 @@ public final class ReplanBench {
 
   private static double nsToMs(long ns) {
     return ns / 1_000_000.0;
-  }
-
-  private static double nsToUs(long ns) {
-    return ns / 1_000.0;
   }
 }

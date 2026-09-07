@@ -47,7 +47,7 @@ Write generated Spec text without running the engine:
 ./mvnw -q exec:java -Dexec.args="--shape logistics --rules 1050 --generate-only --write target/generated-lemma"
 ```
 
-In the result tables, `load_*`, `upd_*`, `snap_*`, and `restore_*` are milliseconds. `eval_*` values are microseconds.
+In the result tables, `load_*`, `upd_*`, `snap_*`, `restore_*`, and `eval_*` are milliseconds.
 
 ## Shapes
 
@@ -89,7 +89,7 @@ The dependency chain is `shop` uses `quote` uses `base_rates`. A sibling Spec `u
 | `upd_base_ms` | `update(base_rates)`: base and its dependents |
 | `upd_ident_ms` | `update(quote)` with identical source |
 | `upd_unrel_ms` | `update(unrelated)` |
-| `eval_mid_us` | `shop.cheapest` after mid V2 while base is still V1 |
+| `eval_mid_ms` | `shop.cheapest` after mid V2 while base is still V1 |
 | `ok` | Expected totals after mid and base updates |
 
 ### Snapshot columns
@@ -136,6 +136,8 @@ try (Engine engine = Engine.create()) {
 Use `BigDecimal` or integers for decimals; `float` and `double` are rejected. Override limits with `Engine.create(ResourceLimits.builder()...)`. `Engine` serializes calls on an internal lock.
 
 ## Measured (logistics ladder)
+
+Java SDK timings for this harness (`Engine.load` / `run` / `update` / `snapshot` / `fromSnapshot`) are in [RESULTS.md](RESULTS.md), including what `load`, `eval`, `upd`, `snap`, and `restore` mean.
 
 Figures below are from the Lemma engine’s release snapshot bench (`cargo benchmarks engine`), same machine as the engine benchmarks doc, on fixtures byte-identical to `SpecGenerator.logistics`. Source of truth: [engine benchmarks](https://github.com/lemma/lemma/blob/main/cli/documentation/reference/benchmarks/engine.md).
 

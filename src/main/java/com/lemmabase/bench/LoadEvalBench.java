@@ -17,8 +17,8 @@ public final class LoadEvalBench {
       int rules,
       int sourceBytes,
       double loadMedianMs,
-      double evalMedianUs,
-      double evalP95Us,
+      double evalMedianMs,
+      double evalP95Ms,
       boolean explain,
       boolean evalSkipped) {}
 
@@ -109,8 +109,8 @@ public final class LoadEvalBench {
         fixture.rules(),
         fixture.sourceBytes(),
         nsToMs(percentile(loadNs, 0.50)),
-        nsToUs(percentile(evalNs, 0.50)),
-        nsToUs(percentile(evalNs, 0.95)),
+        nsToMs(percentile(evalNs, 0.50)),
+        nsToMs(percentile(evalNs, 0.95)),
         explain,
         false);
   }
@@ -201,9 +201,5 @@ public final class LoadEvalBench {
 
   private static double nsToMs(long ns) {
     return ns / 1_000_000.0;
-  }
-
-  private static double nsToUs(long ns) {
-    return ns / 1_000.0;
   }
 }
